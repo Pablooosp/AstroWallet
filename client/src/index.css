@@ -2,3 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+main {
+    font-family: 'Roboto Condensed', sans-serif;
+}
+.logoText{
+    text-shadow: #ffea00 1px 0 8px;
+}
+.bg-content1{
+    background-color: hsl(240deg 5.34% 25.69%);
+    color: white;
+}

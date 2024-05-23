@@ -4,7 +4,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // Estado de carga
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
       setUser(JSON.parse(storedUser));
     }
 
-    setLoading(false); // Finaliza la carga después de intentar cargar el estado del usuario
+    setLoading(false);
   }, []);
 
   const login = async (email, password) => {
@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
         body: JSON.stringify({ email, password })
       });
       const data = await response.json();
-      if (data.token) {
+      if (data.token && data.user) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         setUser(data.user);
@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }) => {
         body: JSON.stringify({ name, email, password })
       });
       const data = await response.json();
-      if (data.token) {
+      if (data.token && data.user) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         setUser(data.user);
@@ -68,7 +68,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   if (loading) {
-    return <div>Loading...</div>; // O cualquier spinner de carga
+    return <div>Loading...</div>;
   }
 
   return (

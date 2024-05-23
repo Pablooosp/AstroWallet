@@ -24,8 +24,8 @@ const Login = () => {
 
   return (
     <section className="w-full h-full flex items-center justify-center">
-      <form className="bg-[#09090b] h-[70%] w-[25%] border-[#161619] border-1 rounded-lg flex flex-col items-center" onSubmit={handleSubmit}>
-        <h2 className="text-center text-6xl font-extrabold mt-8">Login</h2>
+      <form className="bg-[#0D0D0E] h-[70%] w-[25%] border-[#867979] border-1 rounded-lg flex flex-col items-center" onSubmit={handleSubmit}>
+        <h2 className="text-center text-6xl font-extrabold font-sans mt-8">Login</h2>
         <div className="w-[70%] gap-4 mt-[25%]">
           <Input className="" isRequired value={email} type="email" label="Email" onChange={(e) => setEmail(e.target.value)} />
           <Input className="mt-8" isRequired value={password} type="password" label="Password" placeholder="Enter your password" onChange={(e) => setPassword(e.target.value)} />
