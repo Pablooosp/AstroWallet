@@ -5,12 +5,14 @@ require('dotenv').config();
 const app = express();
 const authRouter = require('./routes/authRoutes');
 const balanceRoute = require('./routes/balanceRoute');
+const transactionRoutes = require('./routes/transactionRoute')
 //middlewares
 app.use(cors());
 app.use(express.json());
 //routes
 app.use('/api/auth', authRouter);
 app.use('/api', balanceRoute);
+app.use('/api/transactions', transactionRoutes);
 //mongodb
 mongoose.set('strictQuery', true);
 mongoose.connect(process.env.MONGODB_URL)

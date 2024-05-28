@@ -1,8 +1,7 @@
-import React from "react";
+import React, {useState} from "react";
 import { useAuth } from "../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import astroLogo from "../assets/icon.svg";
-import { Tabs, Tab } from "@nextui-org/tabs";
 import {
   User,
   DropdownItem,
@@ -28,15 +27,12 @@ const Header = () => {
     navigate("/login");
   };
 
-  const moveTransacciones = () => {
-    navigate("/transacciones");
-  }
-  const moveDashboard = () => {
-    navigate("/dashboard");
-  }
-  const moveManage = () => {
-    navigate("/manage");
-  }
+  const location = useLocation();
+  const [active, setActive] = useState(location.pathname);
+
+  const handleSetActive = (path) => {
+    setActive(path);
+  };
 
   return (
     <header className="w-full h-[10%] flex items-center justify-between">
@@ -46,11 +42,29 @@ const Header = () => {
           AstroWallet
         </h2>
       </div>
-      <Tabs variant="solid" size="lg">
-        <Tab onClick={moveDashboard} title="Dashboard" />
-        <Tab onClick={moveTransacciones} title="Transacciones" />
-        <Tab onClick={moveManage} title="Manage" />
-      </Tabs>
+      <nav className="flex justify-around items-center h-full">
+        <Link
+          to="/dashboard"
+          className={`text-white text-2xl font-bold p-2 flex items-center h-full ${active === '/dashboard' ? 'border-b-2 border-white rounded-sm' : ''}`}
+          onClick={() => handleSetActive('/dashboard')}
+        >
+          Dashboard
+        </Link>
+        <Link
+          to="/transacciones"
+          className={`text-white text-2xl font-bold p-2 flex items-center h-full ${active === '/transacciones' ? 'border-b-2 border-white rounded-sm' : ''}`}
+          onClick={() => handleSetActive('/transacciones')}
+        >
+          Transacciones
+        </Link>
+        <Link
+          to="/comunidad"
+          className={`text-white text-2xl font-bold p-2 flex items-center h-full ${active === '/comunidad' ? 'border-b-2 border-white rounded-sm' : ''}`}
+          onClick={() => handleSetActive('/comunidad')}
+        >
+          Comunidad
+        </Link>
+      </nav>
       <div className="w-[20%] flex justify-end pr-8">
         <Dropdown placement="bottom-start">
           <DropdownTrigger>

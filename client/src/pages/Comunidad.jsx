@@ -1,13 +1,13 @@
 import React from "react";
 import Header from "../components/Header";
 
-const Transacciones = () => {
+const Comunidad = () => {
     return (
         <div className="w-full h-full">
             <Header></Header>
-            <p>Transacciones</p>
+            <p>Comunidad</p>
         </div>
     );
 };
 
-export default Transacciones;
+export default Comunidad;

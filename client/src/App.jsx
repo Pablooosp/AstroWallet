@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import Transacciones from "./pages/Transacciones";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./contexts/ProtectedRoute";
+import Comunidad from "./pages/Comunidad";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
           <Route path="/transacciones" element={<ProtectedRoute element={<Transacciones />} />} />
+          <Route path="/comunidad" element={<ProtectedRoute element={<Comunidad />} />} />
         </Routes>
       </Router>
     </AuthProvider>
