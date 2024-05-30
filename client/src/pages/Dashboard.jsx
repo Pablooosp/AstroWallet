@@ -4,6 +4,8 @@ import { Button, Input, DatePicker } from "@nextui-org/react";
 import Coin from "../assets/coin.svg";
 import Rise from "../assets/rise.svg";
 import Fall from "../assets/fall.svg";
+import IncomeTransactions from "../components/IncomeTransactions";
+import ExpenseTransactions from "../components/ExpenseTransactions";
 import {
   Modal,
   ModalContent,
@@ -15,12 +17,23 @@ import {
 
 const Dashboard = () => {
   const [amount, setAmount] = useState("");
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(new Date());
   const [concept, setConcept] = useState("");
   const [balance, setBalance] = useState(0);
   const [gastos, setGastos] = useState(0);
   const [ingresos, setIngresos] = useState(0);
-  const { isOpen, onOpen, onOpenChange, onClose: CloseModal } = useDisclosure();
+  const {
+    isOpen: isOpenIncomeModal,
+    onOpen: onOpenIncomeModal,
+    onOpenChange: onOpenChangeIncomeModal,
+    onClose: onCloseIncomeModal
+  } = useDisclosure();
+  const {
+    isOpen: isOpenExpenseModal,
+    onOpen: onOpenExpenseModal,
+    onOpenChange: onOpenChangeExpenseModal,
+    onClose: onCloseExpenseModal
+  } = useDisclosure();
 
   const getUserData = async () => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -109,7 +122,8 @@ const Dashboard = () => {
       setDate(new Date());
       setAmount("");
       setConcept(""); // Corrige la variable 'setName' a 'setConcept'
-      CloseModal();
+      onCloseIncomeModal();
+      onCloseExpenseModal();
     } catch (error) {
       console.error("Error al crear la transacción:", error);
     }
@@ -127,7 +141,7 @@ const Dashboard = () => {
           <p className="mx-10 font-bold text-4xl">Vista general 🏛️</p>
           <div className="mx-10 flex items-center justify-center">
             <Button
-              onClick={onOpen}
+              onClick={onOpenIncomeModal}
               className="mr-4 bg-[#0f321f] w-28 hover:bg-[#17c663] hover:text-[#0f321f]"
               color="success"
               variant="bordered"
@@ -135,7 +149,7 @@ const Dashboard = () => {
               Ingreso 🤑
             </Button>
             <Button
-              onClick={() => updateBalanceAndCreateTransaction("subtract", "expense")}
+              onClick={onOpenExpenseModal}
               className="ml-4 bg-[#3b0e1e] w-28 hover:bg-[#f2125f] hover:text-[#3b0e1e]"
               color="danger"
               variant="bordered"
@@ -172,53 +186,90 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="flex justify-center items-start h-[50%] w-full mt-8">
-          <div className="m-8 border border-[#867979] bg-black rounded-lg h-[100%] w-[45%]"></div>
-          <div className="m-8 border border-[#867979] bg-black rounded-lg h-[100%] w-[45%]"></div>
+          <IncomeTransactions></IncomeTransactions>
+          <ExpenseTransactions></ExpenseTransactions>
         </div>
       </section>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Modal isOpen={isOpenIncomeModal} onOpenChange={onOpenChangeIncomeModal}>
         <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">
-                Crear ingreso
-              </ModalHeader>
-              <ModalBody>
-                <form action="submit">
-                  <Input
-                    type="text"
-                    label="Concepto"
-                    aria-label="Concepto"
-                    isRequired
-                    value={concept}
-                    onChange={(e) => setConcept(e.target.value)}
-                  ></Input>
-                  <Input
-                    className="mt-2"
-                    type="number"
-                    label="Cantidad"
-                    aria-label="Cantidad"
-                    value={amount}
-                    isRequired
-                    onChange={(e) => setAmount(e.target.value)}
-                  ></Input>
-                  <DatePicker
-                    className="mt-2"
-                    aria-label="Fecha"
-                    onChange={(date) => setDate(date)}
-                  ></DatePicker>
-                </form>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Close
-                </Button>
-                <Button color="primary" onPress={() => updateBalanceAndCreateTransaction('sum', 'income')}>
-                  Action
-                </Button>
-              </ModalFooter>
-            </>
-          )}
+          <ModalHeader className="flex flex-col gap-1">
+            Crear ingreso
+          </ModalHeader>
+          <ModalBody>
+            <form action="submit">
+              <Input
+                type="text"
+                label="Concepto"
+                aria-label="Concepto"
+                isRequired
+                value={concept}
+                onChange={(e) => setConcept(e.target.value)}
+              ></Input>
+              <Input
+                className="mt-2"
+                type="number"
+                label="Cantidad"
+                aria-label="Cantidad"
+                value={amount}
+                isRequired
+                onChange={(e) => setAmount(e.target.value)}
+              ></Input>
+              <DatePicker
+                className="mt-2"
+                aria-label="Fecha"
+                onChange={(date) => setDate(date)}
+              ></DatePicker>
+            </form>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="danger" variant="light" onPress={onCloseIncomeModal}>
+              Close
+            </Button>
+            <Button color="primary" onPress={() => updateBalanceAndCreateTransaction('sum', 'income')}>
+              Action
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isOpenExpenseModal} onOpenChange={onOpenChangeExpenseModal}>
+        <ModalContent>
+          <ModalHeader className="flex flex-col gap-1">
+            Crear ingreso
+          </ModalHeader>
+          <ModalBody>
+            <form action="submit">
+              <Input
+                type="text"
+                label="Concepto"
+                aria-label="Concepto"
+                isRequired
+                value={concept}
+                onChange={(e) => setConcept(e.target.value)}
+              ></Input>
+              <Input
+                className="mt-2"
+                type="number"
+                label="Cantidad"
+                aria-label="Cantidad"
+                value={amount}
+                isRequired
+                onChange={(e) => setAmount(e.target.value)}
+              ></Input>
+              <DatePicker
+                className="mt-2"
+                aria-label="Fecha"
+                onChange={(date) => setDate(date)}
+              ></DatePicker>
+            </form>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="danger" variant="light" onPress={onCloseExpenseModal}>
+              Close
+            </Button>
+            <Button color="primary" onPress={() => updateBalanceAndCreateTransaction('subtract', 'expense')}>
+              Action
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </div>
