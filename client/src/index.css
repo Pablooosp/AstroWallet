@@ -12,3 +12,49 @@ main {
     background-color: hsl(240deg 5.34% 25.69%);
     color: white;
 }
+
+/* customScrollbar.css */
+
+body {
+    /* Necesario para asegurar que la scrollbar se aplique a toda la página */
+    overflow-y: scroll;
+  }
+  
+  /* Estilos para navegadores Webkit (Chrome, Safari) */
+  ::-webkit-scrollbar {
+    width: 12px; /* Ancho de la scrollbar */
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #2c2c2c; /* Color de fondo de la pista */
+    border-radius: 6px; /* Bordes redondeados de la pista */
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: #6c6c6c; /* Color de la barra de desplazamiento */
+    border-radius: 6px; /* Bordes redondeados de la barra de desplazamiento */
+    border: 3px solid #2c2c2c; /* Añadir espacio alrededor de la barra */
+  }
+  
+  /* Estilos para Firefox */
+  * {
+    scrollbar-width: thin; /* Ancho de la scrollbar */
+    scrollbar-color: #6c6c6c #2c2c2c; /* Color de la barra y de la pista */
+  }
+  
+  /* Estilos para Internet Explorer y Edge */
+  body::-ms-scrollbar {
+    width: 12px;
+  }
+  
+  body::-ms-scrollbar-track {
+    background: #2c2c2c;
+    border-radius: 6px;
+  }
+  
+  body::-ms-scrollbar-thumb {
+    background-color: #6c6c6c;
+    border-radius: 6px;
+    border: 3px solid #2c2c2c;
+  }
+  

@@ -6,14 +6,7 @@ import Rise from "../assets/rise.svg";
 import Fall from "../assets/fall.svg";
 import IncomeTransactions from "../components/IncomeTransactions";
 import ExpenseTransactions from "../components/ExpenseTransactions";
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  useDisclosure,
-} from "@nextui-org/react";
+import TransactionsChart from "../components/TransactionChart";
 
 const Dashboard = () => {
   const [amount, setAmount] = useState("");
@@ -22,18 +15,8 @@ const Dashboard = () => {
   const [balance, setBalance] = useState(0);
   const [gastos, setGastos] = useState(0);
   const [ingresos, setIngresos] = useState(0);
-  const {
-    isOpen: isOpenIncomeModal,
-    onOpen: onOpenIncomeModal,
-    onOpenChange: onOpenChangeIncomeModal,
-    onClose: onCloseIncomeModal
-  } = useDisclosure();
-  const {
-    isOpen: isOpenExpenseModal,
-    onOpen: onOpenExpenseModal,
-    onOpenChange: onOpenChangeExpenseModal,
-    onClose: onCloseExpenseModal
-  } = useDisclosure();
+  const [showIncomeModal, setShowIncomeModal] = useState(false);
+  const [showExpenseModal, setShowExpenseModal] = useState(false);
 
   const getUserData = async () => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -61,7 +44,10 @@ const Dashboard = () => {
     }
   };
 
-  const updateBalanceAndCreateTransaction = async (operation, transactionType) => {
+  const updateBalanceAndCreateTransaction = async (
+    operation,
+    transactionType
+  ) => {
     console.log(date);
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user || !user.email) {
@@ -103,14 +89,14 @@ const Dashboard = () => {
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             date: transactionDate.toISOString(),
             type: transactionType,
             amount: parseFloat(amount),
-            name: concept
-          })
+            name: concept,
+          }),
         }
       );
       if (!response2.ok) {
@@ -121,9 +107,9 @@ const Dashboard = () => {
       console.log("Transacción creada:", data);
       setDate(new Date());
       setAmount("");
-      setConcept(""); // Corrige la variable 'setName' a 'setConcept'
-      onCloseIncomeModal();
-      onCloseExpenseModal();
+      setConcept("");
+      setShowIncomeModal(false);
+      setShowExpenseModal(false);
     } catch (error) {
       console.error("Error al crear la transacción:", error);
     }
@@ -134,14 +120,14 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-[80%]">
       <Header />
-      <section className="w-full h-[80%] border-y-1 border-[#867979] bg-[#0D0D0E]">
+      <section className="w-full h-full border-y-1 border-[#867979] bg-[#0D0D0E]">
         <div className="w-full h-[15%] flex justify-between items-center">
           <p className="mx-10 font-bold text-4xl">Vista general 🏛️</p>
           <div className="mx-10 flex items-center justify-center">
             <Button
-              onClick={onOpenIncomeModal}
+              onClick={() => setShowIncomeModal(true)}
               className="mr-4 bg-[#0f321f] w-28 hover:bg-[#17c663] hover:text-[#0f321f]"
               color="success"
               variant="bordered"
@@ -149,7 +135,7 @@ const Dashboard = () => {
               Ingreso 🤑
             </Button>
             <Button
-              onClick={onOpenExpenseModal}
+              onClick={() => setShowExpenseModal(true)}
               className="ml-4 bg-[#3b0e1e] w-28 hover:bg-[#f2125f] hover:text-[#3b0e1e]"
               color="danger"
               variant="bordered"
@@ -190,88 +176,161 @@ const Dashboard = () => {
           <ExpenseTransactions></ExpenseTransactions>
         </div>
       </section>
-      <Modal isOpen={isOpenIncomeModal} onOpenChange={onOpenChangeIncomeModal}>
-        <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">
-            Crear ingreso
-          </ModalHeader>
-          <ModalBody>
-            <form action="submit">
-              <Input
-                type="text"
-                label="Concepto"
-                aria-label="Concepto"
-                isRequired
-                value={concept}
-                onChange={(e) => setConcept(e.target.value)}
-              ></Input>
-              <Input
-                className="mt-2"
-                type="number"
-                label="Cantidad"
-                aria-label="Cantidad"
-                value={amount}
-                isRequired
-                onChange={(e) => setAmount(e.target.value)}
-              ></Input>
-              <DatePicker
-                className="mt-2"
-                aria-label="Fecha"
-                onChange={(date) => setDate(date)}
-              ></DatePicker>
-            </form>
-          </ModalBody>
-          <ModalFooter>
-            <Button color="danger" variant="light" onPress={onCloseIncomeModal}>
-              Close
-            </Button>
-            <Button color="primary" onPress={() => updateBalanceAndCreateTransaction('sum', 'income')}>
-              Action
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-      <Modal isOpen={isOpenExpenseModal} onOpenChange={onOpenChangeExpenseModal}>
-        <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">
-            Crear ingreso
-          </ModalHeader>
-          <ModalBody>
-            <form action="submit">
-              <Input
-                type="text"
-                label="Concepto"
-                aria-label="Concepto"
-                isRequired
-                value={concept}
-                onChange={(e) => setConcept(e.target.value)}
-              ></Input>
-              <Input
-                className="mt-2"
-                type="number"
-                label="Cantidad"
-                aria-label="Cantidad"
-                value={amount}
-                isRequired
-                onChange={(e) => setAmount(e.target.value)}
-              ></Input>
-              <DatePicker
-                className="mt-2"
-                aria-label="Fecha"
-                onChange={(date) => setDate(date)}
-              ></DatePicker>
-            </form>
-          </ModalBody>
-          <ModalFooter>
-            <Button color="danger" variant="light" onPress={onCloseExpenseModal}>
-              Close
-            </Button>
-            <Button color="primary" onPress={() => updateBalanceAndCreateTransaction('subtract', 'expense')}>
-              Action
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <section className="w-full h-[100%] bg-[#0D0D0E] pt-8">
+        <p className="mx-10 font-bold text-4xl">Vista gráfica 🔎</p>
+        <div
+          id="chart"
+          className="border border-[#867979] bg-black rounded-lg w-[70%] h-[80%] mx-auto mt-10"
+        >
+          <TransactionsChart></TransactionsChart>
+        </div>
+      </section>
+      {showIncomeModal && (
+        <div className="fixed z-10 inset-0 overflow-y-auto">
+          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div
+              className="fixed inset-0 transition-opacity"
+              aria-hidden="true"
+            >
+              <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            <span
+              className="hidden sm:inline-block sm:align-middle sm:h-screen"
+              aria-hidden="true"
+            >
+              &#8203;
+            </span>
+            <div className="inline-block align-bottom bg-[#0D0D0E] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle">
+              <div className="bg-[#0D0D0E] px-4 pt-5 pb-4">
+                <div className="sm:flex sm:items-start">
+                  <div className="mt-3 p-10 text-center sm:mt-0 sm:text-left flex flex-col items-center justify-center">
+                    <h3 className="text-lg leading-6 font-medium text-white">
+                      Crear ingreso
+                    </h3>
+                    <div className="mt-2 w-60">
+                      <form action="submit">
+                        <Input
+                          type="text"
+                          label="Concepto"
+                          aria-label="Concepto"
+                          isRequired
+                          value={concept}
+                          onChange={(e) => setConcept(e.target.value)}
+                        ></Input>
+                        <Input
+                          className="mt-2"
+                          type="number"
+                          label="Cantidad"
+                          aria-label="Cantidad"
+                          value={amount}
+                          isRequired
+                          onChange={(e) => setAmount(e.target.value)}
+                        ></Input>
+                        <DatePicker
+                          className="mt-2"
+                          aria-label="Fecha"
+                          onChange={(date) => setDate(date)}
+                        ></DatePicker>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-black px-4 py-3 flex items-center justify-center">
+                <Button
+                  color="danger"
+                  onPress={() => setShowIncomeModal(false)}
+                  className="m-2"
+                >
+                  Cerrar
+                </Button>
+                <Button
+                  color="primary"
+                  onPress={() =>
+                    updateBalanceAndCreateTransaction("sum", "income")
+                  }
+                  className="m-2"
+                >
+                  Crear
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {showExpenseModal && (
+        <div className="fixed z-10 inset-0 overflow-y-auto">
+          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div
+              className="fixed inset-0 transition-opacity"
+              aria-hidden="true"
+            >
+              <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            <span
+              className="hidden sm:inline-block sm:align-middle sm:h-screen"
+              aria-hidden="true"
+            >
+              &#8203;
+            </span>
+            <div className="inline-block align-bottom bg-[#0D0D0E] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle">
+              <div className="bg-[#0D0D0E] px-4 pt-5 pb-4">
+                <div className="sm:flex sm:items-start">
+                  <div className="mt-3 p-10 text-center sm:mt-0 sm:text-left flex flex-col items-center justify-center">
+                    <h3 className="text-lg leading-6 font-medium text-white">
+                      Crear gasto
+                    </h3>
+                    <div className="mt-2 w-60">
+                      <form action="submit">
+                        <Input
+                          type="text"
+                          label="Concepto"
+                          aria-label="Concepto"
+                          isRequired
+                          value={concept}
+                          onChange={(e) => setConcept(e.target.value)}
+                        ></Input>
+                        <Input
+                          className="mt-2"
+                          type="number"
+                          label="Cantidad"
+                          aria-label="Cantidad"
+                          value={amount}
+                          isRequired
+                          onChange={(e) => setAmount(e.target.value)}
+                        ></Input>
+                        <DatePicker
+                          className="mt-2"
+                          aria-label="Fecha"
+                          onChange={(date) => setDate(date)}
+                        ></DatePicker>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-black px-4 py-3 flex items-center justify-center">
+                <Button
+                  color="danger"
+                  onPress={() => setShowExpenseModal(false)}
+                  className="m-2"
+                >
+                  Cerrar
+                </Button>
+                <Button
+                  color="primary"
+                  onPress={() =>
+                    updateBalanceAndCreateTransaction("subtract", "expense")
+                  }
+                  className="m-2"
+                >
+                  Crear
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

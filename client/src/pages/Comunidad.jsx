@@ -5,7 +5,7 @@ const Comunidad = () => {
     return (
         <div className="w-full h-full">
             <Header></Header>
-            <p>Comunidad</p>
+            <p>Comunidad proximamente...</p>
         </div>
     );
 };

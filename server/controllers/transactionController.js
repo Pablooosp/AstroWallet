@@ -7,13 +7,13 @@ exports.createTransaction = async (req, res) => {
   const { date, type, amount, name } = req.body;
 
   try {
-    // Aquí puedes verificar si el usuario existe, por ejemplo, buscándolo en la base de datos
+    // Verificar si el usuario existe
     const user = await User.findOne({ email: userEmail });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Crea una nueva transacción
+    // Crear una nueva transacción
     const newTransaction = new Transaction({
       userEmail, // Asigna el correo electrónico del usuario a la transacción
       date,
@@ -22,16 +22,25 @@ exports.createTransaction = async (req, res) => {
       name,
     });
 
-    // Guarda la transacción en la base de datos
+    // Guardar la transacción en la base de datos
     await newTransaction.save();
 
-    // Agrega el ID de la nueva transacción al usuario
+    // Agregar el ID de la nueva transacción al usuario
     user.transacciones.push(newTransaction._id);
 
-    // Guarda el usuario actualizado en la base de datos
+    // Actualizar balance, ingresos o gastos según el tipo de transacción
+    if (type === 'income') {
+      user.balance += amount;
+      user.ingresos += amount;
+    } else if (type === 'expense') {
+      user.balance -= amount;
+      user.gastos += amount;
+    }
+
+    // Guardar el usuario actualizado en la base de datos
     await user.save();
 
-    // Devuelve la nueva transacción creada
+    // Devolver la nueva transacción creada
     return res.status(201).json(newTransaction);
   } catch (error) {
     console.error('Error al crear la transacción:', error);
@@ -57,4 +66,41 @@ exports.getTransactionsByUser = async (req, res) => {
   }
 };
 
-// Otros métodos CRUD para transacciones...
+// Eliminar una transacción por ID
+exports.deleteTransaction = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Buscar la transacción por ID
+    const transaction = await Transaction.findById(id);
+    if (!transaction) {
+      return res.status(404).json({ error: 'Transaction not found' });
+    }
+
+    // Buscar el usuario asociado a la transacción
+    const user = await User.findOne({ email: transaction.userEmail });
+    if (user) {
+      // Actualizar balance, ingresos o gastos según el tipo de transacción
+      if (transaction.type === 'income') {
+        user.balance -= transaction.amount;
+        user.ingresos -= transaction.amount;
+      } else if (transaction.type === 'expense') {
+        user.balance += transaction.amount;
+        user.gastos -= transaction.amount;
+      }
+
+      // Eliminar la transacción de la lista de transacciones del usuario
+      user.transacciones = user.transacciones.filter(
+        (transactionId) => transactionId.toString() !== id
+      );
+      await user.save();
+    }
+
+    // Eliminar la transacción de la base de datos
+    await transaction.remove();
+
+    res.status(200).json({ message: 'Transaction deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

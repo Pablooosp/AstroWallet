@@ -36,9 +36,8 @@ const Header = () => {
 
   return (
     <header className="w-full h-[10%] flex items-center justify-between">
-      <div className="flex items-center w-[20%] justify-center">
-        <img src={astroLogo} alt="" className="w-12" />
-        <h2 className="logoText font-bold text-4xl text-[#ffea00] select-none">
+      <div className="flex items-center w-[20%] justify-center bg-gradient-to-br from-yellow-300 to-yellow-600 text-transparent bg-clip-text">
+        <h2 className="font-bold text-4xl select-none">
           AstroWallet
         </h2>
       </div>

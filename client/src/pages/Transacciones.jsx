@@ -1,11 +1,12 @@
 import React from "react";
 import Header from "../components/Header";
+import TransactionsTable from "../components/TransactionsTable";
 
 const Transacciones = () => {
     return (
         <div className="w-full h-full">
             <Header></Header>
-            <p>Transacciones</p>
+            <TransactionsTable></TransactionsTable>
         </div>
     );
 };
