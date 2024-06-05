@@ -29,13 +29,6 @@ exports.createTransaction = async (req, res) => {
     user.transacciones.push(newTransaction._id);
 
     // Actualizar balance, ingresos o gastos según el tipo de transacción
-    if (type === 'income') {
-      user.balance += amount;
-      user.ingresos += amount;
-    } else if (type === 'expense') {
-      user.balance -= amount;
-      user.gastos += amount;
-    }
 
     // Guardar el usuario actualizado en la base de datos
     await user.save();
