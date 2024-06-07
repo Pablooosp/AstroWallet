@@ -6,8 +6,7 @@ const app = express();
 const authRouter = require('./routes/authRoutes');
 const balanceRoute = require('./routes/balanceRoute');
 const transactionRoutes = require('./routes/transactionRoute');
-const friendRoutes = require('./routes/friendRoutes'); // Importar las rutas de amigos
-const jointWalletRoutes = require('./routes/walletRoutes'); // Importar las rutas de carteras conjuntas
+const friendRoutes = require('./routes/friendRoutes');
 
 // Middlewares
 app.use(cors());
@@ -18,20 +17,19 @@ app.use('/api/auth', authRouter);
 app.use('/api', balanceRoute);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/users', friendRoutes);
-app.use('/api/users', jointWalletRoutes); // Usar las rutas de carteras conjuntas
 
 // MongoDB
 mongoose.set('strictQuery', true);
 mongoose.connect(process.env.MONGODB_URL)
-  .then(() => console.log('Conexion a la base de datos con exito'))
+  .then(() => console.log('Conexión a la base de datos con éxito'))
   .catch((error) => console.error(error));
 
 // Errors handler
 app.use((err, req, res, next) => {
-  err.statuCode = err.statuCode || 500;
+  err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
 
-  res.status(err.statuCode).json({
+  res.status(err.statusCode).json({
     status: err.status,
     message: err.message
   });

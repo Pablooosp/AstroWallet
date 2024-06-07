@@ -11,7 +11,6 @@ const userSchema = new mongoose.Schema({
   ingresos: { type: Number, default: 0 },
   transacciones: [{ type: Schema.Types.ObjectId, ref: 'Transaction' }],
   friends: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  jointWallets: [{ type: Schema.Types.ObjectId, ref: 'JointWallet' }] // Nuevo campo para carteras conjuntas
 });
 
 const User = mongoose.model('User', userSchema);
