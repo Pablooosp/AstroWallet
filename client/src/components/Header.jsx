@@ -16,11 +16,13 @@ import {
   ModalFooter,
   useDisclosure,
 } from "@nextui-org/react";
+import Friends from "./Friends";
 
 const Header = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [showSocial, setShowSocial] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -85,7 +87,7 @@ const Header = () => {
             <DropdownItem onPress={onOpen} key="settings">
               Settings
             </DropdownItem>
-            <DropdownItem key="team_settings">Social</DropdownItem>
+            <DropdownItem key="team_settings" onPress={() => setShowSocial(true)}>Social</DropdownItem>
             <DropdownItem key="system">Help</DropdownItem>
             <DropdownItem onClick={handleLogout} key="logout" color="danger">
               Log Out
@@ -132,6 +134,47 @@ const Header = () => {
           </ModalContent>
         </Modal>
       </div>
+      {showSocial && (
+        <div className="fixed z-10 inset-0 overflow-y-auto">
+          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div
+              className="fixed inset-0 transition-opacity"
+              aria-hidden="true"
+            >
+              <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            <span
+              className="hidden sm:inline-block sm:align-middle sm:h-screen"
+              aria-hidden="true"
+            >
+              &#8203;
+            </span>
+            <div className="inline-block align-bottom bg-[#0D0D0E] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle">
+              <div className="bg-[#0D0D0E] px-4 pt-5 pb-4">
+                <div className="sm:flex sm:items-start">
+                  <div className="mt-3 p-10 text-center sm:mt-0 sm:text-left flex flex-col items-center justify-center">
+                    <h3 className="text-lg leading-6 font-medium text-white">
+                      Amigos
+                    </h3>
+                    <div className="mt-2 w-60">
+                      <Friends></Friends>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-black px-4 py-3 flex items-center justify-center">
+                <Button
+                  color="danger"
+                  onPress={() => setShowSocial(false)}
+                  className="m-2"
+                >
+                  Cerrar
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

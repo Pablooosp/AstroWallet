@@ -15,7 +15,7 @@ const ChatList = ({ onSelectChat }) => {
   }, []);
 
   return (
-    <div className="p-4 bg-white rounded shadow-md">
+    <div className="p-4 rounded shadow-md">
       <h2 className="text-xl font-bold mb-4">Tus Chats</h2>
       <ul>
         {chats.map((chat) => (

@@ -4,7 +4,7 @@ import TransactionsTable from "../components/TransactionsTable";
 
 const Transacciones = () => {
     return (
-        <div className="w-full h-full">
+        <div className="w-full h-[80%]">
             <Header></Header>
             <TransactionsTable></TransactionsTable>
         </div>

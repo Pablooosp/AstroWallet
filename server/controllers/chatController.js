@@ -36,6 +36,7 @@ exports.getUserChats = async (req, res) => {
 };
 
 // Obtener los mensajes de un chat
+// Obtener los mensajes de un chat
 exports.getChatMessages = async (req, res) => {
   try {
     const messages = await Message.find({ chatId: req.params.chatId }).populate('sender', 'name email');

@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+import Delete from "../assets/delete.svg";
 
 const Friends = () => {
   const [friends, setFriends] = useState([]);
-  const [friendEmail, setFriendEmail] = useState('');
-  const [message, setMessage] = useState('');
+  const [friendEmail, setFriendEmail] = useState("");
+  const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [userEmail, setUserEmail] = useState('');
+  const [userEmail, setUserEmail] = useState("");
 
   useEffect(() => {
     const fetchFriends = async () => {
@@ -20,14 +21,16 @@ const Friends = () => {
 
         setUserEmail(userEmail);
 
-        const response = await fetch(`http://localhost:3000/api/users/${userEmail}/friends`);
+        const response = await fetch(
+          `http://localhost:3000/api/users/${userEmail}/friends`
+        );
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
         const data = await response.json();
         setFriends(data);
       } catch (error) {
-        console.error('Error fetching friends:', error);
+        console.error("Error fetching friends:", error);
       } finally {
         setIsLoading(false);
       }
@@ -38,48 +41,55 @@ const Friends = () => {
 
   const handleAddFriend = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/users/${userEmail}/friends`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ friendEmail }),
-      });
+      const response = await fetch(
+        `http://localhost:3000/api/users/${userEmail}/friends`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ friendEmail }),
+        }
+      );
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error("Network response was not ok");
       }
       const data = await response.json();
       setMessage(data.message);
       if (data.email) {
         setFriends([...friends, data]);
-        setFriendEmail('');
+        setFriendEmail("");
       }
     } catch (error) {
-      console.error('Error adding friend:', error);
-      setMessage('Error adding friend');
+      console.error("Error adding friend:", error);
+      setMessage("Error al añadir amigo");
     }
   };
 
   const handleRemoveFriend = async (friendEmailToRemove) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/users/${userEmail}/friends/${friendEmailToRemove}`, {
-        method: 'DELETE',
-      });
+      const response = await fetch(
+        `http://localhost:3000/api/users/${userEmail}/friends/${friendEmailToRemove}`,
+        {
+          method: "DELETE",
+        }
+      );
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error("Network response was not ok");
       }
-      setFriends(friends.filter(friend => friend.email !== friendEmailToRemove));
-      setMessage('Amigo eliminado');
+      setFriends(
+        friends.filter((friend) => friend.email !== friendEmailToRemove)
+      );
+      setMessage("Amigo eliminado");
     } catch (error) {
-      console.error('Error removing friend:', error);
-      setMessage('Error eliminando amigo');
+      console.error("Error removing friend:", error);
+      setMessage("Error eliminando amigo");
     }
   };
 
   return (
     <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Amigos</h2>
-      <div className="mb-4">
+      <div className="mb-4 flex">
         <input
           type="email"
           value={friendEmail}
@@ -89,9 +99,9 @@ const Friends = () => {
         />
         <button
           onClick={handleAddFriend}
-          className="bg-blue-500 text-white p-2 rounded"
+          className="bg-blue-500 text-white p-1 px-3 rounded"
         >
-          Agregar Amigo
+          +
         </button>
       </div>
       {message && <p className="text-green-500">{message}</p>}
@@ -101,13 +111,13 @@ const Friends = () => {
       ) : (
         <ul className="list-disc list-inside">
           {friends.map((friend, index) => (
-            <li key={index} className="flex justify-between items-center">
+            <li key={index} className="flex justify-between items-center m-1">
               <span>{friend.email}</span>
               <button
                 onClick={() => handleRemoveFriend(friend.email)}
-                className="bg-red-500 text-white p-2 rounded"
+                className="bg-gray-500 text-white px-2 py-1 rounded"
               >
-                Eliminar
+                <img src={Delete} alt="" width="20" />
               </button>
             </li>
           ))}
